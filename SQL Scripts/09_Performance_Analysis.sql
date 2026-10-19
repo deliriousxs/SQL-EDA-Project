@@ -47,26 +47,3 @@ SELECT
 FROM comparison
 ORDER BY sales_month DESC;
 
--- Purpose: Compare category sales with the overall average category sales
-WITH category_sales AS (
-    SELECT
-        p.category,
-        SUM(f.sales_amount) AS total_sales
-    FROM gold.dim_products AS p
-    JOIN gold.fact_sales AS f
-        ON p.product_key = f.product_key
-    GROUP BY p.category
-)
-SELECT
-    category,
-    total_sales,
-    AVG(CAST(total_sales AS DECIMAL(18,2)))
-        OVER () AS avg_category_sales,
-    total_sales
-        - AVG(CAST(total_sales AS DECIMAL(18,2)))
-          OVER () AS difference_from_average,
-    DENSE_RANK() OVER (
-        ORDER BY total_sales DESC
-    ) AS category_rank
-FROM category_sales
-ORDER BY total_sales DESC;
