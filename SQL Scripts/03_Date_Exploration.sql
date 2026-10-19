@@ -43,23 +43,3 @@ ORDER BY
     sales_year,
     sales_month;
 
--- Explore sales by day of the week
-SELECT
-    ((DATEDIFF(
-        DAY,
-        CONVERT(DATE, '19000101'),
-        CAST(order_date AS DATE)
-    ) % 7) + 1) AS weekday_number,
-    DATENAME(WEEKDAY, order_date) AS weekday_name,
-    COUNT(DISTINCT order_number) AS total_orders,
-    SUM(sales_amount) AS total_sales
-FROM gold.fact_sales
-WHERE order_date IS NOT NULL
-GROUP BY
-    ((DATEDIFF(
-        DAY,
-        CONVERT(DATE, '19000101'),
-        CAST(order_date AS DATE)
-    ) % 7) + 1),
-    DATENAME(WEEKDAY, order_date)
-ORDER BY weekday_number;
