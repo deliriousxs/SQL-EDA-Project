@@ -30,22 +30,6 @@ JOIN gold.dim_products AS p
 GROUP BY p.category
 ORDER BY total_sales DESC;
 
--- Measure the size of individual orders.
-WITH order_totals AS (
-    SELECT
-        order_number,
-        SUM(sales_amount) AS order_sales
-    FROM gold.fact_sales
-    WHERE order_number IS NOT NULL
-    GROUP BY order_number
-)
-SELECT
-    COUNT_BIG(*) AS total_orders,
-    SUM(order_sales) AS total_sales,
-    AVG(CAST(order_sales AS DECIMAL(18,2))) AS avg_order_value,
-    MIN(order_sales) AS minimum_order_value,
-    MAX(order_sales) AS maximum_order_value
-FROM order_totals;
 
 -- Measure sales by transaction year and month
 SELECT
