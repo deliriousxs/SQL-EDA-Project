@@ -64,38 +64,3 @@ SELECT
 FROM yearly_sales
 ORDER BY sales_year;
 
--- Purpose: Determine which product categories are gaining or losing sales over time.
-WITH category_monthly_sales AS (
-    SELECT
-        DATEFROMPARTS(
-            YEAR(f.order_date),
-            MONTH(f.order_date),
-            1
-        ) AS sales_month,
-        p.category,
-        SUM(f.sales_amount) AS total_sales
-    FROM gold.fact_sales AS f
-    JOIN gold.dim_products AS p
-        ON f.product_key = p.product_key
-    WHERE f.order_date IS NOT NULL
-    GROUP BY
-        YEAR(f.order_date),
-        MONTH(f.order_date),
-        p.category
-)
-SELECT
-    sales_month,
-    category,
-    total_sales,
-    LAG(total_sales) OVER (
-        PARTITION BY category
-        ORDER BY sales_month
-    ) AS previous_period_sales,
-    total_sales - LAG(total_sales) OVER (
-        PARTITION BY category
-        ORDER BY sales_month
-    ) AS sales_change
-FROM category_monthly_sales
-ORDER BY
-    category,
-    sales_month;
