@@ -14,21 +14,7 @@ SELECT
     AVG(CAST(price AS DECIMAL(18,2))) AS avg_unit_price
 FROM gold.fact_sales;
 
--- Assess the spread and potential anomalies in sales amounts.
-SELECT
-    MIN(sales_amount) AS minimum_sales,
-    MAX(sales_amount) AS maximum_sales,
-    AVG(CAST(sales_amount AS DECIMAL(18,2))) AS mean_sales,
-    STDEV(CAST(sales_amount AS FLOAT)) AS sales_std_dev,
-    SUM(CASE
-        WHEN sales_amount < 0 THEN 1
-        ELSE 0
-    END) AS negative_sales_lines,
-    SUM(CASE
-        WHEN sales_amount = 0 THEN 1
-        ELSE 0
-    END) AS zero_sales_lines
-FROM gold.fact_sales;
+
 
 -- Understand transaction quantities and identify unusual values.
 SELECT
